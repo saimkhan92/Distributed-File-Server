@@ -6,7 +6,7 @@ from ConfigParser import ConfigParser
 import time
 import sys
 
-
+# SECTION A: Read all the configuration from a config file, using config parser
 config_file=sys.argv[1]
 
 config = ConfigParser()
@@ -31,6 +31,8 @@ port_4=int(port4)
 port_names=[port_1,port_2,port_3,port_4]
 server_IP=str(ip1)
 
+# SECTION B: Function for LIST. Open a socket and pass the parameters to the server.<continued>
+# Receive data from server and apply algorithm to check the completeness of files.
 def func_list(list_data):
     list_dict={}
     j=500
@@ -100,6 +102,9 @@ def func_list(list_data):
             
         
                         
+# SECTION C: Function for GET. Open new socket and pass information to the server. <continued>
+# Get all the chunks required to recreate the file at client's end. At every step, check whether all the chunks are available. <continued>
+# If available, break the loop and write all the chunks to a file in the home directory.
 
 def func_get(get_data,client_file_name):
     print("Entered GET Function")
@@ -154,7 +159,7 @@ def func_get(get_data,client_file_name):
     fh.close()
     print("Received file successfully written")
             
-
+# SECTION D: Function for PUT. Based on the hash value, rotate the queue and send different combinations to diffenrent servers.
 def func_put(chunk_dict,hash_mod,deq):
     print("Entered sending function (PUT)")
     
@@ -194,8 +199,12 @@ def func_put(chunk_dict,hash_mod,deq):
         sock.close() 
         print("socket closed\n")
         
-    
-    
+  
+# SECTION E: MAIN function which makes use of previous three functions, based on the user's input.
+# If "put" selected, splits the file into four parts, making use of the read_in_parts function.
+# Then it appends the chunk with username, password, chunksize, hash value, file number etc. and passes them to function.
+# If "get" selected, passes the username, password, filename and get method to function.
+# If list selected, passes the username, password and list method to the method.
 def main(): 
     
     config_file=sys.argv[1]
@@ -267,7 +276,8 @@ def main():
         
     else:
         print("Error! No such option exists.") 
-        
+
+# Function to read the file in fixed chunk size and yeild next chunk everytime it is called.
 def read_in_parts(chunk_size,fh):
         while True:
             data = fh.read(chunk_size)
