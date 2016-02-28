@@ -8,6 +8,9 @@ import sys
 config_dictionary1={}
 argument1=sys.argv[1]#"\DFS1"
 
+# Main function creates Socket, Binds port to IP, Listens, Accepts the socket connection but does not receive data.
+# It passes the accepted client_socket_object and the clientaddress tuple(client IP + client port) to a new thread.
+# The new thread passes the two values to the server_func
 def main():
     
     while True:
@@ -25,10 +28,17 @@ def main():
         print('Creating new thread ')
     sock.close
     print("main socket closed")
-    
+
+# This function takes in the socket values and handles the rest of operations(GET, PUT, LIST) on the server side.
+# It receives the delimited data sent by the client, splits it and checks whether the username and password are in its database.
+# If password matches then it proceeds otherwise it sends an error message back to the client.
+# If "put" request, appends (/username/file_name_number) with the path of the server home directory, creates the file(in the new directory of user) and writes into it.
+# If "list" request, searches the directory of the user(os.listdir), and sends back all the files present in it(.graph.png.2)
+# If "get" request, search the two file pieces in the userdirectory, open file, read file and send the bytes data back to the client.
+
 def server_func(clientSocket,clientAddress):  
     
-    config1 = ConfigParser()                                # read password into a dictionary
+    config1 = ConfigParser()                                # read the password from config file into a dictionary
     config1.read("serverside.ini")
     config_dictionary1 = {}
     for section in config1.sections():
@@ -37,12 +47,11 @@ def server_func(clientSocket,clientAddress):
             config_dictionary1[section][option] = config1.get(section, option)
     
     print(config_dictionary1)
-    
     print("Connection from {}".format(clientAddress))
     
     received_dict={}
     i=1
-    while True:                                              # Receive data
+    while True:                                              # Receive data, sent by the client
         clientSocket.settimeout(1.0)
         try:
             i=i+1
@@ -50,7 +59,7 @@ def server_func(clientSocket,clientAddress):
             received_data= clientSocket.recv(409600)
             if len(received_data)==0:
                 break
-            received_data_list=received_data.split("|||",7)
+            received_data_list=received_data.split("|||",7) 
             print(received_data_list)
             received_dict[i]=received_data_list
             i=i+1
@@ -65,7 +74,7 @@ def server_func(clientSocket,clientAddress):
         print("still inside while loop")
         
     print("Entering password authentication phase")
-    password_flag="not_matched"                             # Password Authentication
+    password_flag="not_matched"                                 # Password Authentication
     for received_list in received_dict.values():
         for uname in config_dictionary1["credentials"]:
             #print(received_list)
@@ -75,11 +84,11 @@ def server_func(clientSocket,clientAddress):
                     #clientSocket.send("PASSWORD AUTHENTICATION SUCCESSFUL!")
                     password_flag="matched"
                     
-    if password_flag=="matched":
-        for received_list in received_dict.values():            #for both received chunks
+    if password_flag=="matched":                                
+        for received_list in received_dict.values():            # for both received chunks
             
             print(received_list)
-            if received_list[2]=="put":                         #put operation
+            if received_list[2]=="put":                         # "put" operation
                 print("operation for put")
                 save_name=argument1[1:len(argument1)]+"\\"+received_list[0]+"\\"+"."+received_list[3]+"."+received_list[6]
                 current_path=os.getcwd()
@@ -88,9 +97,8 @@ def server_func(clientSocket,clientAddress):
                     os.makedirs(os.path.dirname(final_path))
                 fh=open(final_path,"wb")
                 fh.write(received_list[7])
-                
-                                
-            elif received_list[2]=="list":
+                            
+            elif received_list[2]=="list":                      # "list" operation
                 print("operation for list")
                 print(received_list)
                 directory_path=argument1[1:len(argument1)]+"\\"+received_list[0]
@@ -105,12 +113,8 @@ def server_func(clientSocket,clientAddress):
                 
                 send_list=send_list[3:]
                 clientSocket.send(send_list)
-                    
-                
-                
-                
-                
-            elif received_list[2]=="get":
+                        
+            elif received_list[2]=="get":                       # "get" operation
                 print("operation for get")
                 print(received_list)
                 
@@ -128,30 +132,12 @@ def server_func(clientSocket,clientAddress):
                         MESSAGE=element[-1:]+"|||"+data
                         clientSocket.send(MESSAGE)
                         print("File piece {} sent".format(element[-1:]))
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+                   
     else:
         password_flag="not_matched"
-        clientSocket.send("ERROR! Password Incorrect")
+        clientSocket.send("ERROR! Password Incorrect")              # Password not in DB. Error sent to the client
         print("ERROR AT SERVER'S SIDE PASSWORD NOT MATCHED")
             
-            
-            
-            
-            
-            
-                
-        
-    
 if __name__=="__main__":    
     main()
     

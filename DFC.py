@@ -61,14 +61,11 @@ def func_list(list_data):
                 data_list=received_list_data.split("|||")
                 print(data_list)
 
-                
                 for element in data_list:
                     key_temp=str(j)+"__"+element[1:-2]
                     list_dict[key_temp]=element[-1]
                     j=j+1
                             
-                            
-                
             except:
                 print("Entered except statement")
                 print(i)
@@ -85,7 +82,6 @@ def func_list(list_data):
     set_object=set(temporary_list)
     #print(set_object)
     
-    
     print("\n\n*****************LIST OF FILES**********************")
     for i in set_object:
         list_a=[]
@@ -93,15 +89,11 @@ def func_list(list_data):
             if i==key[5:]:
                 list_a.append(list_dict[key])
                 
-                
-        
         if len(set(list_a))==4:
             print(i+" --------- "+"COMPLETE")
         else:
             print(i+" --------- "+"INCOMPLETE")
-            
-        
-                        
+                            
 # SECTION C: Function for GET. Open new socket and pass information to the server. <continued>
 # Get all the chunks required to recreate the file at client's end. At every step, check whether all the chunks are available. <continued>
 # If available, break the loop and write all the chunks to a file in the home directory.
@@ -123,8 +115,7 @@ def func_get(get_data,client_file_name):
         print("testing....2")
         
         sock.sendall(get_data)
-        
-        
+                
         i=0
         while True:
             
@@ -136,8 +127,7 @@ def func_get(get_data,client_file_name):
                 a,b=received_server_data.split("|||",1)
                 get_dict[a]=b
                 print(get_dict.keys())
-
-                
+        
             except:
                 print("Entered except statement")
                 print(i)
@@ -148,8 +138,7 @@ def func_get(get_data,client_file_name):
         sock.close()
         print("socket closed\n")
         print("Initiating process to write the file")
-        
-        
+            
     file_name="received_file_"+client_file_name
     fh=open(file_name,"wb")
     
@@ -220,8 +209,6 @@ def main():
     username=config_dictionary["credentials"]["username"]
     password=config_dictionary["credentials"]["password"]
     
-    
-
     method=raw_input("Please enter the selected method: PUT, GET, LIST\n")
     
     if method=="put":
@@ -263,17 +250,12 @@ def main():
         get_data=username+"|||"+password+"|||"+method+"|||"+client_file_name
         
         func_get(get_data,client_file_name)
-        
-        
-        
-        
-        
+            
     elif method=="list":
         print("list method code")
         list_data=username+"|||"+password+"|||"+method
         func_list(list_data)
-        
-        
+    
     else:
         print("Error! No such option exists.") 
 
