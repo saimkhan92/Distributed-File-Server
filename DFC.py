@@ -6,7 +6,7 @@ from ConfigParser import ConfigParser
 import time
 import sys
 
-# SECTION A: Read all the configuration from a config file, using config parser
+# SECTION A: Read Server IP/Server Ports and client username/password from config file, using config parser
 config_file=sys.argv[1]
 
 config = ConfigParser()
