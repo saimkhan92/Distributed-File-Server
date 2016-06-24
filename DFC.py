@@ -1,3 +1,5 @@
+# Client program to divide the file into pieces based on an algorithm and push onto the CDN servers
+
 import os
 import hashlib
 import socket
