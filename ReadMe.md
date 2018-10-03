@@ -1,18 +1,16 @@
-The code has been divided into three different functionalities:
 
-1. List
-2. Put
-3. Get
+* The code has been divided into three different functionalities:
 
-Each functionality has separate functions and the code contains
-comments at each steps for explanation.
+    1. List
+    2. Put
+    3. Get
 
-Thread has been used in the server side to handle multiple connections.
+* Thread module has been used in the server side to handle multiple connections.
 
-The specified timeout value of 1 second has been used and all the configurations have been read from configuration files.
+* All the configurations have been read from configuration files.
 
-Arguments have been taken by the command line as specified.
+* Arguments have been taken via the command line.
 
-The final code consists of four server and one client code.
+* The final code consists of four server and one client program.
 
 
