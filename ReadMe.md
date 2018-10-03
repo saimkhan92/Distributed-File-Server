@@ -1,8 +1,8 @@
 The code has been divided into three different functionalities:
 
-1 List
-2 Put
-3 Get
+1. List
+2. Put
+3. Get
 
 Each functionality has separate functions and the code contains
 comments at each steps for explanation.
